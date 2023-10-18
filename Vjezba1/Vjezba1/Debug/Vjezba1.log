@@ -1,2 +1,3 @@
-﻿  main.c
-  Vjezba1.vcxproj -> C:\Users\student\Desktop\StrukturePodataka\StruktureLabovi\Vjezba1\Debug\Vjezba1.exe
+﻿  structs.c
+C:\Users\Dora\Desktop\StruktureLabovi\Vjezba1\Vjezba1\structs.c(8,2): warning C4013: 'strcpy' undefined; assuming extern returning int
+  Vjezba1.vcxproj -> C:\Users\Dora\Desktop\StruktureLabovi\Vjezba1\Debug\Vjezba1.exe
