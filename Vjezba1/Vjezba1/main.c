@@ -4,13 +4,17 @@
 
 int main() 
 {
+	int errorMessage = 0;
 	Ptr head = (Ptr)malloc(sizeof(Student));
 	if (!head)
 		return MALLOC_ERROR;
 
 	headInit(head);
-	readFromFile("studenti.txt", head);
-	printList(head->next);
+	errorMessage = readFromFile("studenti.txt", head);
+	if (errorMessage)
+		return EXIT_FAILURE;
+	printList(head);
+	deleteAll(head);
 
 	return 0;
 }

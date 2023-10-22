@@ -1,0 +1,8 @@
+﻿  main.c
+  structs.c
+C:\Users\Dora\Desktop\StruktureLabovi\Vjezba2\Vjezba2\structs.c(12,22): warning C4047: 'return': 'Ptr' differs in levels of indirection from 'int'
+C:\Users\Dora\Desktop\StruktureLabovi\Vjezba2\Vjezba2\structs.c(14,2): warning C4013: 'strcpy' undefined; assuming extern returning int
+C:\Users\Dora\Desktop\StruktureLabovi\Vjezba2\Vjezba2\structs.c(28,22): warning C4047: 'return': 'Ptr' differs in levels of indirection from 'int'
+C:\Users\Dora\Desktop\StruktureLabovi\Vjezba2\Vjezba2\structs.c(70,7): warning C4047: 'initializing': 'char' differs in levels of indirection from 'char [2]'
+  Generating Code...
+  Vjezba2.vcxproj -> C:\Users\Dora\Desktop\StruktureLabovi\Vjezba2\x64\Debug\Vjezba2.exe

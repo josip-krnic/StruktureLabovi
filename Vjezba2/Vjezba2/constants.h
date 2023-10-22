@@ -3,10 +3,11 @@
 
 // constants
 #define MAX_STR_LENGTH 1024
-#define MAX_EXAM_POINTS 100
+#define TRUE 1
+#define FALSE 0
 
 // errors
-#define MALLOC_ERROR -2
-#define FILE_OPEN_ERROR -3
+#define MALLOC_ERROR -1
+#define FILE_OPEN_ERROR -2
 
 #endif 

@@ -5,20 +5,19 @@
 
 struct _student;
 typedef struct _student* Ptr;
-
 typedef struct _student {
 	char firstName[MAX_STR_LENGTH];
 	char lastName[MAX_STR_LENGTH];
-	unsigned int points;
-	float relativeGrade;
+	int birthYear;
 	Ptr next;
 } Student;
 
-int headInit(Ptr head);
-float calcRelativeScore(unsigned int apsoluteScore);
+Ptr initHead();
+Ptr initElement(char firstName[MAX_STR_LENGTH], char lastName[MAX_STR_LENGTH], int year);
+int addToBeginning(Ptr head, Ptr element);
+int addToEnd(Ptr head, Ptr element);
 int printList(Ptr head);
-int insertEnd(Ptr head, Student element);
-int readFromFile(char fileName[MAX_STR_LENGTH], Ptr head);
+int menu(Ptr head);
 int deleteAll(Ptr head);
 
 #endif

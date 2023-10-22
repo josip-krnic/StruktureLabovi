@@ -19,6 +19,7 @@ float calcRelativeScore(unsigned int apsoluteScore)
 
 int printList(Ptr head)
 {
+	head = head->next;
 	printf("%-20s %10s %10s\n", "FULL NAME", "POINTS", "SCORE");
 	while (head != NULL)
 	{
@@ -31,9 +32,12 @@ int printList(Ptr head)
 int insertEnd(Ptr head, Student element)
 {
 	Ptr Q = (Ptr)malloc(sizeof(Student));
-	if (Q == NULL)
+	if (!Q)
+	{
+		printf("Malloc error in insertEnd(Ptr head, Student element) function.\n");
 		return MALLOC_ERROR;
-
+	}
+		
 	while (head->next != NULL)
 		head = head->next;
 
@@ -57,7 +61,11 @@ int readFromFile(char fileName[MAX_STR_LENGTH], Ptr head)
 	int points = 0;
 
 	if (!file)
+	{
+		printf("Error opening file %s in function \
+			readFromFile(char fileName[MAX_STR_LENGTH], Ptr head)\n", fileName);
 		return FILE_OPEN_ERROR;
+	}
 
 	while (!feof(file))
 	{
@@ -68,6 +76,28 @@ int readFromFile(char fileName[MAX_STR_LENGTH], Ptr head)
 		element.next = NULL;
 		insertEnd(head, element);
 	}
+
+	fclose(file);
+
+	return EXIT_SUCCESS;
+}
+
+int deleteAll(Ptr head)
+{
+	Ptr temp = (Ptr)malloc(sizeof(Student));
+	if (!temp)
+	{
+		printf("Malloc error in deleteAll(Ptr head) function");
+		return MALLOC_ERROR;
+	}	
+
+	while (!head->next)
+	{
+		temp = head->next;
+		head->next = temp->next;
+		free(temp);
+	}
+	free(head);
 
 	return EXIT_SUCCESS;
 }
