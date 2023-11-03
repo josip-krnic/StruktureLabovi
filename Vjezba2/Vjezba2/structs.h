@@ -19,5 +19,11 @@ int addToEnd(Ptr head, Ptr element);
 int printList(Ptr head);
 int menu(Ptr head);
 int deleteAll(Ptr head);
+Ptr findElement(Ptr head, char name[MAX_STR_LENGTH]);
+int deleteElement(Ptr head, char name[MAX_STR_LENGTH]);
+int insertAfter(Ptr head, Ptr element, char name[MAX_STR_LENGTH]);
+int insertBefore(Ptr head, Ptr element, char name[MAX_STR_LENGTH]);
+int printToFile(Ptr head);
+int addFromFile(Ptr head);
 
 #endif
