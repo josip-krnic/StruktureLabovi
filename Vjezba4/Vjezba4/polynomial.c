@@ -105,6 +105,8 @@ int extractFromFile(nodePtr head)
 
 	while (!feof(file))
 	{
+		// try with fgets
+		fscanf(file, "%s", buffer);
 		addNode(head);
 		current = head->next;
 		if (sscanf(buffer, " %f %f", coef, exp) == 2)
