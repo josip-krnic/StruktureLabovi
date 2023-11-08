@@ -2,22 +2,20 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
-Ptr initHead()
-{
-	Ptr temp = (Ptr)malloc(sizeof(Student));
-	if (!temp)
-	{
-		printf("Unable to initialize head element.\n");
-		return NULL;
-	}
-	strcpy(temp->firstName, "HEAD");
-	strcpy(temp->lastName, "HEAD");
-	temp->birthYear = 0;
-	temp->next = NULL;
-
-	return temp;
-}
+/*
+* NE MICI HEAD. STAVI POINTER I STAVI MU VRIJEDNOST HEAD.
+* CURRENT = HEAD
+* ne usporeduj pointere (head == temp) vec njihov sadrzaj (name,lastname...)
+* 
+* 4. zadatak rijesi pomocu jednostruko vezane liste
+*	-> sortirani unos
+*	-> sscanf(buffer, "%dx^%d %n", n = kolicina memorije koja je procitana)
+*		-> sscanf vraca broj procitanih elemenata (mora vratiti 2 jer ce citaju koeficijent i eksponent)
+* 
+* provjeri kako promijeniti boje u konzoli
+*/
 
 Ptr initElement(char firstName[MAX_STR_LENGTH], char lastName[MAX_STR_LENGTH], int year)
 {
@@ -44,26 +42,28 @@ int addToBeginning(Ptr head, Ptr element)
 
 int addToEnd(Ptr head, Ptr element)
 {
-	while (head->next)
-		head = head->next;
+	Ptr current = head;
+	while (current->next)
+		current = current->next;
 
-	head->next = element;
+	current->next = current;
 	return 0;
 }
 
 int printList(Ptr head)
 {
-	if (head->next == NULL)
+	Ptr current = head;
+	if (current->next == NULL)
 	{
 		printf("Empty list.\n");
 		return EXIT_SUCCESS;
 	}
 	printf("%20s%20s%20s", "First Name", "Last Name", "Year Of Birth\n");
-	head = head->next;
-	while (head) 
+	current = current->next;
+	while (current) 
 	{
-		printf("%20s%20s%20d\n", head->firstName, head->lastName, head->birthYear);
-		head = head->next;
+		printf("%20s%20s%20d\n", current->firstName, current->lastName, current->birthYear);
+		current = current->next;
 	}
 		
 	return EXIT_SUCCESS;
@@ -163,7 +163,7 @@ int menu(Ptr head)
 			char firstname[MAX_STR_LENGTH] = { 0 };
 			char lastname[MAX_STR_LENGTH] = { 0 };
 			int yearOfBirth = 0;
-			Ptr element = initHead();
+			Ptr element = NULL;
 			scanf(" %s %s %d", firstname, lastname, &yearOfBirth);
 
 			element = initElement(firstname, lastname, yearOfBirth);
@@ -182,7 +182,7 @@ int menu(Ptr head)
 			char firstname[MAX_STR_LENGTH] = { 0 };
 			char lastname[MAX_STR_LENGTH] = { 0 };
 			int yearOfBirth = 0;
-			Ptr element = initHead();
+			Ptr element = NULL;
 			scanf(" %s %s %d", firstname, lastname, &yearOfBirth);
 
 			element = initElement(firstname, lastname, yearOfBirth);
@@ -225,10 +225,10 @@ int menu(Ptr head)
 
 int deleteAll(Ptr head)
 {
-	Ptr temp = initHead();
+	Ptr temp = NULL;
 	temp = head->next;
-
-	while (!temp)
+	
+	while (temp)
 	{
 		head->next = temp->next;
 		free(temp);
@@ -241,28 +241,29 @@ int deleteAll(Ptr head)
 
 Ptr findElement(Ptr head, char name[MAX_STR_LENGTH])
 {
-	head = head->next;
-	while (NULL != head)
+	Ptr current = head->next;
+	while (NULL != current)
 	{
-		if (!strcmp(head->lastName, name))
-			return head;
-		head = head->next;
+		if (!strcmp(current->lastName, name))
+			return current;
+		current = current->next;
 	}
 	return NULL;
 }
 
 int deleteElement(Ptr head, char name[MAX_STR_LENGTH])
 {
-	Ptr temp = initHead();
+	Ptr temp = NULL;
+	Ptr current = head;
 	temp = findElement(head, name);
 	if (!temp)
 	{
 		return EXIT_FAILURE;
 	}
 
-	while (head->next != NULL && head->next != temp)
-		head = head->next;
-	head->next = temp->next;
+	while (current->next != NULL && current->next != temp)
+		current = current->next;
+	current->next = temp->next;
 	free(temp);
 
 	return EXIT_SUCCESS;
@@ -299,6 +300,8 @@ int printToFile(Ptr head)
 {
 	char filename[MAX_STR_LENGTH] = { 0 };
 	FILE* newFile = NULL;
+	Ptr current = head->next;
+
 	printf("Enter file name:\n");
 	scanf("%s", filename);
 
@@ -308,12 +311,12 @@ int printToFile(Ptr head)
 		printf("Unable to open file.\n");
 		return FILE_OPEN_ERROR;
 	}
-	while (head->next != NULL)
+	while (current != NULL)
 	{
-		head = head->next;
-		fprintf(newFile, "%s %s %d\n", head->lastName, head->firstName, head->birthYear);
+		fprintf(newFile, "%s %s %d\n", current->lastName, current->firstName, current->birthYear);
+		current = current->next;
 	}
-	fclose(head);
+	fclose(filename);
 
 	return EXIT_SUCCESS;
 }
@@ -326,8 +329,15 @@ int addFromFile(Ptr head)
 	int birthyear = 0;
 	Ptr element = NULL;
 	FILE* newFile = NULL;
+	int status = 0;
 	printf("Enter file name:\n");
 	scanf(" %s", filename);
+
+	if (strstr(filename, ".txt"))
+	{
+		printf("File name must contain extension .txt.\n");
+		return EXIT_FAILURE;
+	}
 
 	newFile = fopen(filename, "r");
 	if (!filename)
@@ -338,7 +348,12 @@ int addFromFile(Ptr head)
 
 	while (!feof(newFile))
 	{
-		fscanf(newFile, "%s %s %d", firstname, lastname, &birthyear);
+		status = fscanf(newFile, "%s %s %d", firstname, lastname, &birthyear);
+		if (status != 3)
+		{
+			printf("Unable to read.\n");
+			return EXIT_FAILURE;
+		}
 		element = initElement(firstname, lastname, birthyear);
 		addToBeginning(head, element);
 	}

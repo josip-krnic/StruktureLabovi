@@ -12,7 +12,6 @@ typedef struct _student {
 	Ptr next;
 } Student;
 
-Ptr initHead();
 Ptr initElement(char firstName[MAX_STR_LENGTH], char lastName[MAX_STR_LENGTH], int year);
 int addToBeginning(Ptr head, Ptr element);
 int addToEnd(Ptr head, Ptr element);
@@ -25,5 +24,6 @@ int insertAfter(Ptr head, Ptr element, char name[MAX_STR_LENGTH]);
 int insertBefore(Ptr head, Ptr element, char name[MAX_STR_LENGTH]);
 int printToFile(Ptr head);
 int addFromFile(Ptr head);
+int studentCompare(Ptr first, Ptr second);
 
 #endif
