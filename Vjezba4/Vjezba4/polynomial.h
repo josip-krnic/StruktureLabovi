@@ -1,24 +1,40 @@
 #ifndef POLYNOMIAL_H
 #define POLYNOMIAL_H
 
-struct _element;
-typedef struct _element* elePtr;
-typedef struct _element {
-	float coef;
-	float exp;
-	elePtr next;
-} Element;
+#include "constants.h"
 
-struct _node;
-typedef struct _node* nodePtr;
-typedef struct _node {
-	elePtr head;
-	nodePtr next;
-} Node;
+typedef struct _member {
 
-int addElement(elePtr eleHead, float coef, float exp);
-int addNode(nodePtr head);
-int printPolynomial(nodePtr head);
-int extractFromFile(nodePtr head);
+	int coefficient;
+	int exponent;
+
+} Member;
+
+struct Cvor;
+typedef struct Cvor* Position;
+typedef struct Cvor {
+
+	Member Member;
+	Position Next;
+
+} Cvor;
+
+Position PrevEl(Position P, Member O);
+Position EndOfList(Position P);
+
+int NewElSort(Position P, Member M);
+int NewElAfter(Position P, Member M);
+int NewElAfterEl(Position P, Member MA, Member M);
+int NewElBeforeEl(Position P, Member MA, Member M);
+int NewElEnd(Position P, Member M);
+int PrintEl(Position P);
+int PrintList(Position P);
+
+int ReadFromFile(char nameOfFile[MAX_STR_LEN], Position Pozn, int line);
+int Add(Position P1, Position P2, Position zbroj);
+int Multiply(Position P1, Position P2, Position Multiple);
+
+int DelNextEl(Position P);
+int DelAll(Position P);
 
 #endif

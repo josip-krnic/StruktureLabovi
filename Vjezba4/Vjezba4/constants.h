@@ -2,7 +2,8 @@
 #define CONSTANTS_H
 
 // constants
-#define MAX_STR_LEN (1024)
+#define MAX_STR_LEN 1024
+#define true 1
 
 // errors
 #define MALLOC_ERROR (-1)
