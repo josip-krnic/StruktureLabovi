@@ -1,30 +1,44 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "tree.h"
-#include "constants.h"
+
 
 int main()
 {
-	int choice = 0;
-	nodePtr head = (nodePtr)malloc(sizeof(Node));
-	strcpy(head->folderName, "\0");
-	head->nextFolder = NULL;
-	head->subfolder = NULL;
+    int returnVal;
+    Position root;
+    Poz stack;
+    returnVal = 0;
 
-	if (!head)
-	{
-		printf("Malloc error in main function.\n");
-		return MALLOC_ERROR;
-	}
 
-	do
-	{
-		choice = menu(head);
-		printf("%d\n\n", choice);
-	} while (!choice);
-	
+    stack = malloc(sizeof(Stog));
+    if (stack == NULL)
+    {
+        printf("Insufficient ram space!");
+        return PROGRAM_FAIL;
+    }
+    initStog(stack);
 
-	return EXIT_SUCCESS;
+    root = malloc(sizeof(Directory));
+    if (root == NULL)
+    {
+        printf("Insufficient ram space!");
+        return PROGRAM_FAIL;
+    }
+    initDir(root);
+
+    strcpy(root->name, "D:");
+
+    printMsg();
+
+    while (returnVal != EXIT) {
+        returnVal = consoleHandler(&root, stack);
+    }
+    emptyStack(stack, &root);
+    deleteTree(root);
+    free(stack);
+    return PROGRAM_SUCCESS;
 }
