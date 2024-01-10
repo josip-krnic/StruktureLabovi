@@ -1,31 +1,50 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
-
+#include <string.h>
+#include <time.h>
 #include "tree.h"
-#include "constants.h"
 
-int main() {
-	Position P;
-	int choice = 1, n = 1;
-	P = NULL;
 
-	while (choice != 0) {
-		printMenu();
-		while (getInput(&choice) != 0) {
-			printf("Input not recognised!\n");
-			printf("\tUnos: ");
-		}
-		n = 1;
-		if (choice >= 0 && choice <= 8) {
-			choice = switchCase(&P, choice);
-		}
-		else {
-			printf("Input is not one of the choices!\n");
-		}
-	}
+int main()
+{
+	int numbers[10] = { 2,5,7,8,11,1,4,2,3,7 };
+	srand(time(NULL));
 
-	deletetree(P);
-	return EXIT_SUCCESS;
+	Position head = NULL;
+	FILE* fp = NULL;
+
+	head = newTreeInput(head, numbers);
+
+	if (openFile(&fp) != SUCCESS)
+		return FAILURE;
+
+
+	printf("Ispis inorder nakon input funkcije:\t");
+	if (printTreeinorder(head))
+		printf("No data!(Tree is empty)");
+	printf("\n");
+
+	fprintf(fp, "%s", "Stablo nakon insert funkcije:");
+	printTreeinorderToFile(head, &fp);
+	fprintf(fp, "%s", "\n\n");
+
+
+	replace(head);
+
+
+	printf("Ispis inorder nakon replace funkcije:\t");
+	if (printTreeinorder(head))
+		printf("No data!(Tree is empty)");
+	printf("\n");
+
+	fprintf(fp, "%s", "Stablo nakon replace funkcije:");
+	printTreeinorderToFile(head, &fp);
+	fprintf(fp, "%s", "\n\n");
+
+	head = deletetree(head);
+	fclose(fp);
+
+	return 0;
 }
+

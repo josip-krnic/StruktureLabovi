@@ -1,120 +1,64 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
-
+#include <string.h>
+#include <time.h>
 #include "tree.h"
 #include "constants.h"
 
+//---------------------------funkcije za stablo (unos/inicijalizacija i sl)
+
 int initNode(Position P)
 {
-	P->value = 0;
+	P->number = 0;
 	P->right = NULL;
 	P->left = NULL;
 	return EXIT_SUCCESS;
 }
-int initStog(Poz S) {
-	S->adr = NULL;
-	S->next = NULL;
-	return EXIT_SUCCESS;
-}
-Position newNode(Position P, int val)
+
+Position newNode(int number)
 {
-	Position Q;
-	Q = malloc(sizeof(Node));
-	if (Q == NULL)
-	{
+	Position node = (Position)(malloc(sizeof(Node)));
+	if (node == NULL) {
 		printf("Insufficient ram space!");
-		return P;
+		return node;
 	}
-	initNode(Q);
-	Q->value = val;
-	P = insertNode(P, Q);
-	return P;
+	node->number = number;
+	node->left = NULL;
+	node->right = NULL;
+	return node;
 }
-Position insertNode(Position P, Position Q) {
-	if (P == NULL) return Q;
-	if (Q->value > P->value) {
-		P->right = insertNode(P->right, Q);
-		return P;
-	}
-	else if (Q->value < P->value) {
-		P->left = insertNode(P->left, Q);
-		return P;
-	}
-	else {
-		printf("Value already in tree!");
-		free(Q);
-	}
-	return P;
-}
-int printNode(Position P)
+
+Position insert(Position P, int number)
 {
-	printf(" %i", P->value);
-	return EXIT_SUCCESS;
-}
-int printTreeinorder(Position P) {
-	if (P == NULL) return EXIT_SUCCESS;
-	printTreeinorder(P->left);
-	printNode(P);
-	printTreeinorder(P->right);
-	return EXIT_SUCCESS;
-}
-int printTreepreorder(Position P) {
-	if (P == NULL) return EXIT_SUCCESS;
-	printNode(P);
-	printTreepreorder(P->left);
-	printTreepreorder(P->right);
-	return EXIT_SUCCESS;
-}
-int printTreepostorder(Position P) {
-	if (P == NULL) return EXIT_SUCCESS;
-	printTreepostorder(P->left);
-	printTreepostorder(P->right);
-	printNode(P);
-	return EXIT_SUCCESS;
-}
-int printTreelevelorder(Position P) {
-	Poz stack;
-	stack = malloc(sizeof(Stog));
-	initStog(stack);
-	if (stack == NULL) {
-		printf("Insufficient ram space!\n");
-		return EXIT_FAILURE;
+	if (P == NULL) {
+		P = newNode(number);
+		return P;
 	}
 
-	pushtree(stack, P);
-	push(stack, P);
-	printStack(stack);
-	free(stack);
-	return EXIT_SUCCESS;
-}
-int printMenu() {
+	if (number >= P->number) {
+		P->left = insert(P->left, number);
+	}
+	else if (number < P->number) {
+		P->right = insert(P->right, number);
+	}
 
-	printf("\n\n");
-	printf("#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*\n");
-	printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-	printf("\n");
-	printf("Unesite broj one opcije koju zelite odabrati.\n");
-	printf("(0)  Prekinuti program.\n");
-	printf("(1)  Dodati novu vijednost u stablo.\n");
-	printf("(2)  Izbrisati element iz stabla.\n");
-	printf("(3)  Pronaci element te ispisati njegovu dubinu u stablu.\n");
-	printf("(4)  Ispisati stablo (inorder).\n");
-	printf("(5)  Ispisati stablo (preorder).\n");
-	printf("(6)  Ispisati stablo (postorder).\n");
-	printf("(7)  Ispisati stablo (level order).\n");
-	printf("(8) Izbrisati stablo.\n");
-	printf("\n");
-	printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-	printf("#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*\n\n");
-	printf("\tUnos:    ");
-	return EXIT_SUCCESS;
+	return P;
 }
-int switchCase(Position* Padr, int choice) {
-	int val = 0;
-	Position P;
-	P = *Padr;
+
+Position newTreeInput(Position P, int numbers[10])
+{
+	int num = 0, i = 0, choice = 10, n = 0;
+
+	while (choice <= 0 || choice > 4) {
+		printf("Unesite broj ispred opcije koju zelite odabrati:  \n");
+		printf("(0)  Prekinuti program.\n");
+		printf("(1)  Unijeti predefnirane brojeve u stablo.\n");
+		printf("(2)  Rucno unijeti brojeve.\n");
+		printf("(3)  Naumicno odabiranje n brojeva.\n");
+		printf("Unos: ");
+		getInput(&choice);
+	}
 
 	switch (choice)
 	{
@@ -122,195 +66,200 @@ int switchCase(Position* Padr, int choice) {
 	case 0:
 		break;
 	case 1:
-		printf("\tEnter the value of the node:    ");
-		if (!getInput(&val)) {
-			*Padr = newNode(P, val);
-		}
-		else {
-			printf("Incorrect input!");
+		while (i < 10) {
+			P = insert(P, numbers[i]);
+			i++;
 		}
 		break;
 	case 2:
-		printf("\tEnter the value of the node:    ");
-		if (!getInput(&val))
+		printf("\nUnosite cijele brojeve koje zelite dodati u stablo.\n");
+		printf("Nakon unosa elementa pritisnite enter.\n");
+		printf("Za prekid unosa, unesite nesto sto nije broj.\n\n");
+
+		printf("Unos: ");
+
+
+		while (!getInput(&num))
 		{
-			*Padr = deleteNode(P, val);
-		}
-		else {
-			printf("Incorrect input!");
+			printf("Unos: ");
+			P = insert(P, num);
 		}
 		break;
 	case 3:
-		val = 0;
-		printf("\tEnter the value of the node:    ");
-		if (!getInput(&val))
-		{
-			findNode(P, val, 0);
+		printf("\nn = ");
+		getInput(&n);
+		while (i < n) {
+			P = insert(P, randNum());
+			i++;
 		}
-		else {
-			printf("Incorrect input!");
-		}
-		break;
-	case 4:
-		if (P == NULL) {
-			printf(" Tree is empty!\n");
-			break;
-		}
-		printf("\tInorder ispis:  ");
-		printTreeinorder(P);
-		printf("\n");
-		break;
-	case 5:
-		if (P == NULL) {
-			printf(" Tree is empty!\n");
-			break;
-		}
-		printf("\tPreorder ispis:  ");
-		printTreepreorder(P);
-		printf("\n");
-		break;
-	case 6:
-		if (P == NULL) {
-			printf(" Tree is empty!\n");
-			break;
-		}
-		printf("\tPostorder ispis:  ");
-		printTreepostorder(P);
-		printf("\n");
-		break;
-	case 7:
-		if (P == NULL) {
-			printf(" Tree is empty!\n");
-			break;
-		}
-		printf("\tPostorder ispis:  ");
-		printTreelevelorder(P);
-		printf("\n");
-		break;
-	case 8:
-		if (P == NULL) {
-			printf(" Tree wasn't deleted. Tree is empty!\n");
-			break;
-		}
-		*Padr = deletetree(P);
-		printf("Tree deleted!\n");
 		break;
 	}
-	return choice;
+
+
+	return P;
 }
-int push(Poz stack, Position P)
+
+
+// zadatak pod b replace
+
+
+
+int replace(Position P)
 {
+	int tempnum = 0;
 	if (P == NULL) {
+		return 0;
+	}
+	tempnum = P->number;
+
+	P->number = replace(P->left) + replace(P->right);
+
+	return tempnum + P->number;
+}
+
+
+// zadatak pod c  rand
+
+
+int randNum()
+{
+	return (rand() % (MAX_RANDOM - MIN_RANDOM + 1)) + MIN_RANDOM;
+}
+
+Position randomTree(Position P)
+{
+	int n = 0;
+	int random = 0;
+	int i = 0;
+
+	printf("\nUnesite broj nasumicnih elemenata u stablu:\n");
+	getInput(&n);
+
+	for (i = 0; i < n; i++)
+	{
+		random = randNum();
+		P = insert(P, random);
+	}
+
+	return P;
+}
+
+
+// print stabla
+
+
+int printTreeinorder(Position P) {
+	if (P == NULL) return EXIT_FAILURE;
+	printTreeinorder(P->left);
+	printNode(P);
+	printTreeinorder(P->right);
+	return EXIT_SUCCESS;
+}
+int printNode(Position P)
+{
+	printf("%d ", P->number);
+	return EXIT_SUCCESS;
+}
+
+
+// stack funkcije te upis u datoteku 
+
+int initStog(Poz S) {
+	S->val = 0;
+	S->next = NULL;
+	return EXIT_SUCCESS;
+}
+
+int printTreeinorderToFile(Position P, FILE** fp) {
+	Poz stack = malloc(sizeof(Stog));
+	if (stack == NULL) {
+		printf("Insufficient ram space!\n");
 		return EXIT_FAILURE;
 	}
-	Poz Q;
-	Q = malloc(sizeof(Stog));
-	if (Q == NULL)
-	{
+	initStog(stack);
+
+	pushTreeToStack(stack, P);
+
+	popStackToFile(stack, *fp);
+	free(stack);
+	return EXIT_SUCCESS;
+}
+int pushTreeToStack(Poz stack, Position P) {
+	if (P == NULL) return EXIT_FAILURE;
+
+	pushTreeToStack(stack, P->left);
+	push(stack, P->number);
+	pushTreeToStack(stack, P->right);
+
+	return EXIT_SUCCESS;
+}
+int push(Poz stack, int number) {
+	Poz Q = malloc(sizeof(Stog));
+	if (Q == NULL) {
+		printf("Insufficient ram space!\n");
 		return EXIT_FAILURE;
 	}
 	initStog(Q);
 
+	Q->val = number;
 	Q->next = stack->next;
 	stack->next = Q;
-	Q->adr = P;
+	return EXIT_SUCCESS;
+}
+int popStackToFile(Poz stack, FILE* fp) {
+	Poz temp = NULL;
 
-	return EXIT_SUCCESS;
-}
-int pushtree(Poz stack, Position P) {
-	if (P == NULL) {
-		return EXIT_SUCCESS;
-	}
-	pushtree(stack, P->right);
-	pushtree(stack, P->left);
-	push(stack, P->right);
-	push(stack, P->left);
-	return EXIT_SUCCESS;
-}
-Position pop(Poz stack)
-{
-	Poz temp;
-	Position adr;
-	adr = NULL; temp = NULL;
 
-	temp = stack->next;
-	stack->next = temp->next;
-	adr = temp->adr;
-	initStog(temp);
-	free(temp);
-	return adr;
-}
-int printStack(Poz stack)
-{
-	while (stack->next != NULL) {
-		printf(" %i", pop(stack)->value);
+	if (stack->next != NULL) {
+		temp = stack->next;
+		return EXIT_FAILURE;
+	}
+	while (temp != NULL)
+	{
+		stack->next = temp->next;
+		fprintf(fp, " %i", temp->val);
+		free(temp);
+		temp = stack->next;
 	}
 	return EXIT_SUCCESS;
 }
-int findNode(Position P, int val, int D) {
 
-	if (val > P->value) {
-		findNode(P->right, val, ++D);
-	}
-	else if (val < P->value) {
-		findNode(P->left, val, ++D);
-	}
-	else {
-		printf("\tValue found! Value:");
-		printNode(P);
-		printf("\n\tDepth of node: %i\n", D);
-	}
-	return EXIT_SUCCESS;
-}
-int getInput(int* val)
+
+// funkcija za unos samo brojeva sa stdin
+
+int getInput(int* number)
 {
-	*val = 0;
-	char input[MAX_NUMBER_INT] = "\0";
-	memset(input, 0, MAX_NUMBER_INT);
+	*number = 0;
+	char input[MAX_ARRAY_SIZE] = "\0";
+	memset(input, 0, MAX_ARRAY_SIZE);
 
 	fgets(input, sizeof(input), stdin);
 
-	if (sscanf(input, " %i", val) == 1) {
+	if (sscanf(input, " %i", number) == 1) {
 		return EXIT_SUCCESS;
 	}
 	return EXIT_FAILURE;
 }
-Position deleteNode(Position P, int val) {
-	if (P == NULL) {
-		return EXIT_SUCCESS;
+
+int openFile(FILE** fp) {
+	char filename[MAX_FILENAME] = { '\0' };
+	time_t result = time(NULL);
+	struct tm tm = *localtime(&result);
+
+	memset(filename, 0, MAX_FILENAME);
+	sprintf(filename, "%s %d-%02d-%02d %02d-%02d-%02d", "Inorder printout ",
+		tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
+
+	*fp = fopen(filename, "a");
+	if (fp == NULL) {
+		printf("File not created!!");
+		return EXIT_FAILURE;
 	}
-	if (P->value < val) {
-		P->right = deleteNode(P->right, val);
-	}
-	else if (P->value > val) {
-		P->left = deleteNode(P->left, val);
-	}
-	else if (P->right) {
-		P->value = findMin(P->right)->value;
-		P->right = deleteNode(P->right, P->value);
-	}
-	else if (P->left) {
-		P->value = findMax(P->right)->value;
-		P->left = deleteNode(P->left, P->value);
-	}
-	else {
-		free(P);
-		return NULL;
-	}
-	return P;
+	return EXIT_SUCCESS;
 }
-Position findMin(Position P) {
-	while (P != NULL && P->left != NULL) {
-		P = P->left;
-	}
-	return P;
-}
-Position findMax(Position P) {
-	while (P != NULL && P->right != NULL) {
-		P = P->right;
-	}
-	return P;
-}
+
+//funkcija za brisanje stabla
+
 Position deletetree(Position P) {
 	if (P == NULL) {
 		return NULL;
